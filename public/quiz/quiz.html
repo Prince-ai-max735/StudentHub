@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudentHub Quiz</title>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E🎓%3C/text%3E%3C/svg%3E">
+
+<audio src="/quiz/sonican-quiz-background-loop-thinking-news-275636.mp3" autoplay loop ></audio>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7ff;
+    color: #1f2937;
+}
+
+.back {
+    display: inline-block;
+    margin: 20px;
+    padding: 10px 18px;
+    background: blue;
+    color: lightgoldenrodyellow;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.back:hover {
+    transform: translateY(-2px);
+    background: lavenderblush;
+    color: whitesmoke;
+}
+
+header {
+    background: linear-gradient(135deg, #1a12b1, #9774c5);
+    color: white;
+    text-align: center;
+    padding: 35px 20px;
+    border-radius: 0 0 30px 30px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+header p {
+    margin: 10px 0 0;
+    opacity: 0.9;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 15px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.subjects {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.subject {
+    border: none;
+    min-height: 140px;
+    border-radius: 22px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.subject .icon {
+    font-size: 38px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.subject:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(79,70,229,0.18);
+    background: #e0e7ff;
+}
+
+#quizArea {
+    display: none;
+}
+
+.quiz-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+#subjectTitle {
+    color: #4f46e5;
+    margin: 0;
+}
+
+.timer {
+    background: #eef2ff;
+    color: #4f46e5;
+    padding: 12px 18px;
+    border-radius: 14px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#questionNumber {
+    color: #6b7280;
+    font-weight: bold;
+}
+
+.question {
+    background: #f8fafc;
+    padding: 22px;
+    border-left: 5px solid #4f46e5;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.option {
+    width: 100%;
+    text-align: left;
+    margin: 10px 0;
+    padding: 17px;
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    background: white;
+    color: #1f2937;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.option:hover {
+    border-color: #6366f1;
+    background: #eef2ff;
+    transform: translateX(4px);
+}
+
+.main-btn {
+    border: none;
+    padding: 14px 22px;
+    border-radius: 12px;
+    background: #4f46e5;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.main-btn:hover {
+    background: #3730a3;
+}
+
+.back-btn {
+    background: #6b7280;
+    margin-left: 8px;
+}
+
+.back-btn:hover {
+    background: #4b5563;
+}
+
+#result {
+    display: none;
+    text-align: center;
+}
+
+.result-icon {
+    font-size: 60px;
+}
+
+#score {
+    font-size: 28px;
+    color: #4f46e5;
+}
+
+#percentage {
+    font-size: 21px;
+    color: #6b7280;
+}
+
+.quiz-points-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 22px auto 0;
+    padding: 18px 22px;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 20px;
+    background: rgba(255,255,255,.13);
+    box-shadow: 0 8px 25px rgba(25,10,90,.18);
+    text-align: left;
+}
+
+.quiz-points-header h3 {
+    margin: 0 0 5px;
+}
+
+.quiz-points-header p {
+    margin: 0;
+}
+
+.points-number {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.16);
+}
+
+.points-number span {
+    font-size: 30px;
+    font-weight: 900;
+    color: #ffe082 !important;
+}
+
+.points-number small {
+    color: #fff !important;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.coin-rain {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 99999;
+}
+
+.flying-coin {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    font-size: 30px;
+    filter: drop-shadow(0 0 10px #ffca28);
+    animation: studentHubCoinFly 1.65s cubic-bezier(.12,.72,.2,1) forwards;
+}
+
+@keyframes studentHubCoinFly {
+    0% {
+        transform: translate(0,0) scale(.35) rotate(0);
+        opacity: 0;
+    }
+    18% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x),var(--y)) scale(1.25) rotate(720deg);
+        opacity: 0;
+    }
+}
+.back { 
+    color: white; 
+    text-decoration: none; 
+    background: #ffffff20; 
+    padding: 11px 18px; 
+    border-radius: 10px; 
+} 
+
+.points-popup {
+    position: fixed;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 100000;
+    pointer-events: none;
+    color: #ffca28;
+    font-size: clamp(25px,5vw,42px);
+    font-weight: 1000;
+    white-space: nowrap;
+    text-shadow: 0 3px 0 #8a4b08, 0 0 18px #ffb300;
+    animation: studentHubPointsPop 1.65s ease forwards;
+}
+
+@keyframes studentHubPointsPop {
+    0% {
+        transform: translate(-50%,0) scale(.4);
+        opacity: 0;
+    }
+    25% {
+        transform: translate(-50%,-35px) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%,-115px) scale(1);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 700px) {
+    header h1 {
+        font-size: 25px;
+    }
+
+    .subjects {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .subject {
+        min-height: 120px;
+        font-size: 15px;
+    }
+
+    .subject .icon {
+        font-size: 32px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .question {
+        font-size: 18px;
+    }
+
+    .back-btn {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .subjects {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:600px) {
+    .quiz-points-header {
+        margin: 15px;
+        padding: 15px;
+    }
+
+    .points-number span {
+        font-size: 25px;
+    }
+}
+</style>
+</head>
+
+<body style="background: url('student.jpg'); background-repeat: no-repeat; background-size: cover;">
+    
+<button onclick="history.back()" class="back">← Dashboard</button>
+ 
+<header>
+    <h1>📚 StudentHub</h1>
+    <h1>● QUIZ</h1>
+    <p>Learn • Practice • Improve</p>
+
+    <div class="quiz-points-header">
+        <div>
+            <h3>🏆 My Quiz Points</h3>
+            <p>Keep learning. Keep earning!</p>
+        </div>
+
+        <div class="points-number">
+            <span id="totalQuizPoints">0</span>
+            <small>POINTS</small>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div id="subjectArea" class="card">
+        <h2>🎯 Choose a Subject</h2>
+        <p>Choose a subject and have fun in your academic goal.</p>
+
+        <div class="subjects">
+            <button class="subject" onclick="startQuiz('Mathematics')">
+                <span class="icon">📐</span>
+                Mathematics
+            </button>
+
+            <button class="subject" onclick="startQuiz('English')">
+                <span class="icon">📖</span>
+                English
+            </button>
+
+            <button class="subject" onclick="startQuiz('Biology')">
+                <span class="icon">🧬</span>
+                Biology
+            </button>
+
+            <button class="subject" onclick="startQuiz('Chemistry')">
+                <span class="icon">⚗️</span>
+                Chemistry
+            </button>
+
+            <button class="subject" onclick="startQuiz('Physics')">
+                <span class="icon">⚡</span>
+                Physics
+            </button>
+
+            <button class="subject" onclick="startQuiz('Civic Education')">
+                <span class="icon">🏛</span>
+                Civic Education
+            </button>
+
+            <button class="subject" onclick="startQuiz('Business studies')">
+                <span class="icon">💰</span>
+                Business studies
+            </button>
+        </div>
+    </div>
+
+    <div id="quizArea" class="card">
+        <div class="quiz-top">
+            <h2 id="subjectTitle"></h2>
+            <div class="timer">⏱️ <span id="timer">5:00</span></div>
+        </div>
+
+        <p id="questionNumber"></p>
+        <div id="question" class="question"></div>
+        <div id="options"></div>
+
+        <button class="main-btn" onclick="nextQuestion()">Next Question →</button>
+        <button class="main-btn back-btn" onclick="goBack()">← Back to Subjects</button>
+    </div>
+
+    <div id="result" class="card">
+        <div class="result-icon">🎉</div>
+        <h2>Quiz Completed!</h2>
+        <h3 id="score"></h3>
+        <p id="percentage"></p>
+
+        <button class="main-btn" onclick="location.reload()">
+            🔄 Take Another Quiz
+        </button>
+    </div>
+</div>
+<script>
+const quizData = {
+    Mathematics: [
+        { question: "What is the area of a square with a side of 8 cm?", options: ["16 cm²", "32 cm²", "64 cm²", "80 cm²"], answer: "64 cm²" },
+        { question: "248 + 379 – 152", options: ["1534", "475", "175", "421"], answer: "475" },
+        { question: "5/6 – 1/4?", options: ["24/7", "12/8", "7/12", "12/7"], answer: "7/12" },
+        { question: "Express 3.625 as a fraction", options: ["3.1542", "10/12", "29/8", "13/5"], answer: "29/8" },
+        { question: "What is 2/5 × 3/7?", options: ["35/6", "15/2", "21/13", "6/35"], answer: "6/35" },
+        { question: "How many sides does a pentagon have?", options: ["4", "5", "6", "7"], answer: "5" },
+        { question: "What is 25% of 200?", options: ["25", "40", "50", "75"], answer: "50" },
+        { question: "Simplify 5x + 3x - 7", options: ["x=-7", "2x=15", "8x-7", "2x-5"], answer: "8x-7" },
+        { question: "Expand 3(2a – 4)", options: ["6a-12", "5a-4", "2a=12", "6a=24"], answer: "6a-12" },
+        { question: "What is 12 × 5?", options: ["50", "60", "70", "80"], answer: "60" },
+        { question: "How many degrees are in a right angle?", options: ["45°", "90°", "180°", "360°"], answer: "90°" },
+        { question: "3/4 + 2/3", options: ["17/12", "1⅕", "21/9", "Both A&B"], answer: "Both A&B" },
+        { question: "Express 25 in binary", options: ["11011", "11001", "10011", "None of the above"], answer: "11001" }
+    ],
+
+    English: [
+        { question: "Which word is a noun?", options: ["Quickly", "Beautiful", "School", "Run"], answer: "School" },
+        { question: "What is the opposite of 'ancient'?", options: ["Old", "Modern", "Past", "Historic"], answer: "Modern" },
+        { question: "Which word is a verb?", options: ["Run", "Beautiful", "School", "Quick"], answer: "Run" },
+        { question: "Which is a synonym of 'brave'?", options: ["Cowardly", "Courageous", "Weak", "Afraid"], answer: "Courageous" },
+        { question: "What is the plural of 'criterion'?", options: ["Criterions", "Criteria", "Criterias", "Criterion"], answer: "Criteria" },
+        { question: "Identify the adjective: 'The clever boy won.'", options: ["Boy", "Won", "Clever", "The"], answer: "Clever" },
+        { question: "Which word is an adverb?", options: ["Beautiful", "Quickly", "Happiness", "Running"], answer: "Quickly" },
+        { question: "What is the opposite of 'generous'?", options: ["Kind", "Selfish", "Helpful", "Friendly"], answer: "Selfish" },
+        { question: "Choose the correct spelling.", options: ["Accomodation", "Acommodation", "Accommodation", "Acomodation"], answer: "Accommodation" },
+        { question: "Which sentence is grammatically correct?", options: ["She go to school.", "She goes to school.", "She going school.", "She gone school."], answer: "She goes to school." },
+        { question: "What is the past tense of 'teach'?", options: ["Teached", "Taught", "Teaching", "Teaches"], answer: "Taught" },
+        { question: "Identify the pronoun.", options: ["Table", "Quickly", "They", "Beautiful"], answer: "They" },
+        { question: "A group of lions is called a ____.", options: ["Herd", "Pride", "Flock", "Pack"], answer: "Pride" }
+    ],
+
+    Biology: [
+        { question: "Which organ pumps blood around the human body?", options: ["Lungs", "Heart", "Kidney", "Brain"], answer: "Heart" },
+        { question: "Which part of a plant absorbs water from the soil?", options: ["Flower", "Leaf", "Root", "Fruit"], answer: "Root" },
+        { question: "Which organ is mainly used for breathing?", options: ["Heart", "Lungs", "Stomach", "Kidney"], answer: "Lungs" },
+        { question: "What is the basic unit of life?", options: ["The heart", "The brain", "The cell", "Food"], answer: "The cell" },
+        { question: "What controls movement of substances in and out of a cell?", options: ["Cell membrane", "Cytoplasm", "Endoplasmic", "Reticulum"], answer: "Cell membrane" },
+        { question: "An organism with two identical alleles is called what?", options: ["Heterozygous", "Homozygous", "Dominant", "Recessive"], answer: "Homozygous" },
+        { question: "DNA carries genetic information in the sequence of its:", options: ["Phosphate groups", "Nitrogen bases", "Hydrogen bonds"], answer: "Nitrogen bases" }
+    ],
+
+    Chemistry: [
+        { question: "What is the chemical symbol for oxygen?", options: ["O", "Ox", "C", "H"], answer: "O" },
+        { question: "What is H₂O commonly called?", options: ["Oxygen", "Hydrogen", "Water", "Carbon dioxide"], answer: "Water" },
+        { question: "What is the chemical symbol for hydrogen?", options: ["H", "He", "Hy", "O"], answer: "H" }
+    ],
+
+    Physics: [
+        { question: "What force pulls objects toward Earth?", options: ["Friction", "Gravity", "Magnetism", "Pressure"], answer: "Gravity" },
+        { question: "What is the SI unit of force?", options: ["Watt", "Joule", "Newton", "Volt"], answer: "Newton" },
+        { question: "What is the SI unit of electric current?", options: ["Volt", "Ampere", "Watt", "Ohm"], answer: "Ampere" }
+    ],
+
+    "Civic Education": [
+        { question: "What is democracy?", options: ["Government by the people", "Government by one person", "Government by soldiers", "Government without laws"], answer: "Government by the people" },
+        { question: "Which is a civic responsibility?", options: ["Breaking laws", "Obeying laws", "Destroying property", "Ignoring laws"], answer: "Obeying laws" },
+        { question: "What is a constitution?", options: ["A country's fundamental laws", "A football rule", "A school timetable", "A shopping list"], answer: "A country's fundamental laws" },
+        { question: "What is the supreme law of a country?", options: ["Decree", "Constitution", "School rules", "Custom"], answer: "Constitution" },
+        { question: "Which arm of government makes laws?", options: ["Executive", "Judiciary", "Legislature", "Police"], answer: "Legislature" },
+        { question: "What is democracy?", options: ["Rule by soldiers", "Rule by the people", "Rule by a king", "Rule by one person"], answer: "Rule by the people" },
+        { question: "Which is a fundamental human right?", options: ["Right to education", "Right to steal", "Right to cheat", "Right to destroy property"], answer: "Right to education" },
+        { question: "What is citizenship?", options: ["Membership of a country", "Travelling abroad", "Owning a car", "Being wealthy"], answer: "Membership of a country" },
+        { question: "Which institution conducts elections in Nigeria?", options: ["NCC", "INEC", "NERC", "EFCC"], answer: "INEC" },
+        { question: "What is corruption?", options: ["Honesty", "Misuse of entrusted power for personal gain", "Patriotism", "Discipline"], answer: "Misuse of entrusted power for personal gain" },
+        { question: "Which promotes national unity?", options: ["Tribalism", "Discrimination", "Tolerance", "Violence"], answer: "Tolerance" },
+        { question: "What is the main duty of the judiciary?", options: ["Making laws", "Interpreting laws", "Conducting elections", "Collecting taxes"], answer: "Interpreting laws" },
+        { question: "What does patriotism mean?", options: ["Love and loyalty to one's country", "Hating other countries", "Breaking laws", "Avoiding responsibilities"], answer: "Love and loyalty to one's country" },
+        {question:"Which of the following is the current constitution of the Federal Republic of Nigeria?",options:["1979 Constitution","1963 Constitution","1999 Constitution","1960 Constitution"],answer:"1999 Constitution"},
+        {question:"A constitution whose provisions are contained in a single document is known as a ______constitution.",options:["Flexible","Written","Unwritten","Federal"],answer:"Written"},
+        {question:"Decisions made by courts, especially those involving constitutional interpretations, are known as_________________. ", options:["Political conventions" ,"Judicial decisions","Historical documents","Treaties"], answer:"Judicial decisions" }
+    ],
+
+    "Business studies": [
+        { question:"Pipeline transportation is suitable for conveying"}
+    ]
+};
+
+
+// QUIZ VARIABLES
+let currentSubject = "";
+let questions = [];
+let currentQuestion = 0;
+let score = 0;
+let timeLeft = 300;
+let timerInterval;
+let quizFinished = false;
+
+
+// ACCOUNT-SCOPED QUIZ POINTS
+function getStudentHubAccountId() {
+    const directUsers = [
+        window.currentUser,
+        window.loggedInUser,
+        window.studentHubUser,
+        window.user
+    ];
+
+    for (const candidate of directUsers) {
+        if (candidate && typeof candidate === "object") {
+            const id = candidate.id || candidate.user_id ||
+                candidate.userId || candidate.email || candidate.username;
+
+            if (id !== undefined && id !== null && String(id).trim()) {
+                return String(id).trim();
+            }
+        }
+    }
+
+    const possibleKeys = [
+        "studentHubUser", "currentUser", "loggedInUser", "user", "userData"
+    ];
+
+    for (const storage of [localStorage, sessionStorage]) {
+        for (const key of possibleKeys) {
+            const stored = storage.getItem(key);
+            if (!stored) continue;
+
+            try {
+                const parsed = JSON.parse(stored);
+
+                if (parsed && typeof parsed === "object") {
+                    const id = parsed.id || parsed.user_id ||
+                        parsed.userId || parsed.email || parsed.username;
+
+                    if (id !== undefined && id !== null && String(id).trim()) {
+                        return String(id).trim();
+                    }
+                }
+            } catch (error) {
+                // Ignore values that are not JSON user objects.
+            }
+        }
+    }
+
+    return "guest";
+}
+
+const quizAccountId = getStudentHubAccountId();
+
+const quizPointsStorageKey =
+    "studentHubQuizPoints_" + encodeURIComponent(quizAccountId);
+
+let totalQuizPoints =
+    Number(localStorage.getItem(quizPointsStorageKey)) || 0;
+
+
+function updateQuizPoints() {
+    const pointsElement = document.getElementById("totalQuizPoints");
+
+    if (pointsElement) {
+        pointsElement.textContent = totalQuizPoints.toLocaleString();
+    }
+}
+
+updateQuizPoints();
+
+
+// COIN SOUND
+let rewardAudioContext = null;
+
+function playCoinSound() {
+    try {
+        const AudioContextClass =
+            window.AudioContext || window.webkitAudioContext;
+
+        if (!AudioContextClass) return;
+
+        if (!rewardAudioContext) {
+            rewardAudioContext = new AudioContextClass();
+        }
+
+        const audio = rewardAudioContext;
+
+        if (audio.state === "suspended") {
+            audio.resume();
+        }
+
+        const oscillator = audio.createOscillator();
+        const gain = audio.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(720, audio.currentTime);
+
+        oscillator.frequency.exponentialRampToValueAtTime(
+            1450, audio.currentTime + 0.13
+        );
+
+        gain.gain.setValueAtTime(0.09, audio.currentTime);
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.001, audio.currentTime + 0.2
+        );
+
+        oscillator.connect(gain);
+        gain.connect(audio.destination);
+
+        oscillator.start();
+        oscillator.stop(audio.currentTime + 0.2);
+
+    } catch (error) {
+        console.warn("Coin sound could not play:", error);
+    }
+}
+
+
+// FLYING COINS + POINTS POPUP
+function animateCoins(points) {
+    if (!points || points <= 0) return;
+
+    const container = document.createElement("div");
+    container.className = "coin-rain";
+    document.body.appendChild(container);
+
+    for (let i = 0; i < 35; i++) {
+        const coin = document.createElement("span");
+
+        coin.className = "flying-coin";
+        coin.textContent = "🪙";
+
+        coin.style.setProperty(
+            "--x",
+            ((Math.random() - 0.5) * 650) + "px"
+        );
+
+        coin.style.setProperty(
+            "--y",
+            ((Math.random() - 0.5) * 620) + "px"
+        );
+
+        coin.style.animationDelay = (Math.random() * 0.35) + "s";
+
+        container.appendChild(coin);
+
+        window.setTimeout(playCoinSound, i * 35);
+    }
+
+    const popup = document.createElement("div");
+    popup.className = "points-popup";
+    popup.textContent = "+" + points + " POINTS!";
+
+    document.body.appendChild(popup);
+
+    window.setTimeout(() => container.remove(), 2300);
+    window.setTimeout(() => popup.remove(), 1900);
+}
+
+
+// RANDOM QUESTION FUNCTION
+function shuffleQuestions(array) {
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+
+        [shuffled[i], shuffled[randomIndex]] =
+            [shuffled[randomIndex], shuffled[i]];
+    }
+
+    return shuffled;
+}
+
+
+// START QUIZ
+function startQuiz(subject) {
+    currentSubject = subject;
+
+    questions = shuffleQuestions(quizData[subject]);
+
+    currentQuestion = 0;
+    score = 0;
+    timeLeft = 300;
+    quizFinished = false;
+
+    document.getElementById("subjectArea").style.display = "none";
+    document.getElementById("quizArea").style.display = "block";
+    document.getElementById("result").style.display = "none";
+
+    document.getElementById("subjectTitle").textContent =
+        subject + " Quiz";
+
+    showQuestion();
+    startTimer();
+}
+
+
+// SHOW QUESTION
+function showQuestion() {
+    const q = questions[currentQuestion];
+
+    document.getElementById("questionNumber").textContent =
+        "Question " + (currentQuestion + 1) + " of " + questions.length;
+
+    document.getElementById("question").textContent = q.question;
+
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    q.options.forEach(function(option) {
+        const button = document.createElement("button");
+
+        button.textContent = option;
+        button.className = "option";
+
+        button.onclick = function() {
+            selectAnswer(option);
+        };
+
+        optionsDiv.appendChild(button);
+    });
+}
+
+
+// CHECK ANSWER
+function selectAnswer(answer) {
+    if (quizFinished) return;
+
+    if (answer === questions[currentQuestion].answer) {
+        score++;
+    }
+
+    nextQuestion();
+}
+
+
+// NEXT QUESTION
+function nextQuestion() {
+    currentQuestion++;
+
+    if (currentQuestion >= questions.length) {
+        finishQuiz();
+        return;
+    }
+
+    showQuestion();
+}
+
+
+// TIMER
+function startTimer() {
+    clearInterval(timerInterval);
+
+    document.getElementById("timer").textContent = "5:00";
+
+    timerInterval = setInterval(function() {
+        timeLeft--;
+
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+
+        document.getElementById("timer").textContent =
+            minutes + ":" + String(seconds).padStart(2, "0");
+
+        if (timeLeft <= 0) {
+            finishQuiz();
+        }
+    }, 1000);
+}
+
+
+// FINISH QUIZ
+function finishQuiz() {
+    if (quizFinished) return;
+
+    quizFinished = true;
+    clearInterval(timerInterval);
+
+    document.getElementById("quizArea").style.display = "none";
+    document.getElementById("result").style.display = "block";
+
+    const percentage = questions.length
+        ? Math.round((score / questions.length) * 100)
+        : 0;
+
+    // Earn 1 point for each percentage point scored.
+    const pointsEarned = percentage;
+
+    totalQuizPoints += pointsEarned;
+
+    localStorage.setItem(
+        quizPointsStorageKey,
+        String(totalQuizPoints)
+    );
+
+    updateQuizPoints();
+    animateCoins(pointsEarned);
+
+    document.getElementById("score").textContent =
+        "Score: " + score + " / " + questions.length;
+
+    document.getElementById("percentage").textContent =
+        "Percentage: " + percentage + "% | Points Earned: " +
+        pointsEarned + " | Total Points: " + totalQuizPoints;
+}
+
+
+// GO BACK
+function goBack() {
+    clearInterval(timerInterval);
+
+    document.getElementById("quizArea").style.display = "none";
+    document.getElementById("subjectArea").style.display = "block";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudentHub | Premium Timer</title>
+<button onclick="history.back()" class="back">Go Back</button>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse at 15% 10%, #29205c 0%, transparent 40%),
+        radial-gradient(ellipse at 90% 85%, #102c58 0%, transparent 40%),
+        #090d19;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.timer-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px 25px;
+    border: 1px solid #343c60;
+    border-radius: 28px;
+    background: rgba(20, 26, 47, 0.88);
+    box-shadow: 0 20px 80px #0008;
+    text-align: center;
+    backdrop-filter: blur(20px);
+}
+.back{
+display: inline-block;
+margin: 20px;
+padding: 10px 18px;
+background: blue;
+color :lightgoldenrodyellow;
+text-decoration: none;
+font-weight: 600;
+border-radius: 12px;
+box-shadow: 0 4px 12px 
+rgba(0,0,0,0.1);
+transition: 0.3s;
+}
+
+.back:hover {
+transform: translateY(-2px);
+background: lavenderblush;
+color: whitesmoke;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.logo {
+    font-size: 19px;
+    font-weight: bold;
+    letter-spacing: .5px;
+}
+
+.logo span {
+    color: #8b79ff;
+}
+
+.live {
+    color: #55e9b0;
+    font-size: 12px;
+    background: #16372f;
+    padding: 8px 12px;
+    border-radius: 30px;
+}
+
+h1 {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #919bb4;
+    font-size: 13px;
+}
+
+.clock {
+    margin: 24px 0;
+    color: #9d9aff;
+    font-size: 16px;
+    letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+}
+
+.circle-area {
+    position: relative;
+    width: 270px;
+    height: 270px;
+    margin: 10px auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle-area svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #303650;
+    stroke-width: 9;
+}
+
+.circle-progress {
+    fill: none;
+    stroke: url(#timerGradient);
+    stroke-width: 9;
+    stroke-linecap: round;
+    stroke-dasharray: 754;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset .3s linear;
+    filter: drop-shadow(0 0 9px #8273ff);
+}
+
+.time-content {
+    z-index: 2;
+}
+
+.timer-display {
+    font-size: 65px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 25px #8173ff66;
+}
+
+.time-label {
+    color: #8f9bb6;
+    font-size: 12px;
+    margin-top: 8px;
+    letter-spacing: 3px;
+}
+
+.status {
+    color: #a8b1c9;
+    font-size: 13px;
+    min-height: 20px;
+    margin-bottom: 24px;
+}
+
+.presets {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin: 20px 0;
+}
+
+.preset {
+    color: #c3c9dc;
+    background: #252d47;
+    border: 1px solid #39425f;
+    border-radius: 10px;
+    padding: 11px 15px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.preset.active {
+    color: white;
+    background: linear-gradient(120deg, #6555ed, #8d60ef);
+    border-color: transparent;
+    box-shadow: 0 5px 18px #755aff55;
+}
+
+.custom-time {
+    margin: 20px 0;
+    color: #9da8c1;
+    font-size: 13px;
+}
+
+.custom-time input {
+    width: 100px;
+    padding: 12px;
+    margin-left: 8px;
+    background: #11182c;
+    border: 1px solid #414b70;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.controls button {
+    padding: 15px 20px;
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: .2s;
+}
+
+.controls button:active {
+    transform: scale(.94);
+}
+
+.start-btn {
+    background: linear-gradient(120deg, #6656f2, #a05af5);
+    color: white;
+    flex: 1;
+    box-shadow: 0 7px 22px #7655ef44;
+}
+
+.pause-btn {
+    background: #303954;
+    color: white;
+}
+
+.reset-btn {
+    background: #392a45;
+    color: #ff9cbb;
+}
+
+.alarm-btn {
+    display: none;
+    background: #e64c72;
+    color: white;
+    margin: 15px auto 0;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.sound-setting {
+    margin-top: 24px;
+    color: #9da8c1;
+    font-size: 13px;
+}
+
+.sound-setting input {
+    accent-color: #8c72ff;
+    vertical-align: middle;
+}
+
+.footer {
+    margin-top: 25px;
+    padding-top: 18px;
+    border-top: 1px solid #303650;
+    color: #6f7b99;
+    font-size: 11px;
+}
+
+@media(max-width: 400px) {
+    .timer-card {
+        padding: 23px 15px;
+    }
+
+    .circle-area {
+        width: 240px;
+        height: 240px;
+    }
+
+    .timer-display {
+        font-size: 55px;
+    }
+
+    .controls button {
+        padding: 13px 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="timer-card">
+
+    <div class="header">
+        <div class="logo">STUDENT<span>HUB</span></div>
+        <div class="live">● SMART TIMER</div>
+    </div>
+
+    <h1>Focus Mode</h1>
+    <p class="subtitle">Make every second count.</p>
+
+    <div class="clock" id="clock">00:00:00</div>
+
+    <div class="circle-area">
+
+        <svg viewBox="0 0 260 260">
+            <defs>
+                <linearGradient id="timerGradient">
+                    <stop offset="0%" stop-color="#5b8cff"/>
+                    <stop offset="100%" stop-color="#b05bff"/>
+                </linearGradient>
+            </defs>
+
+            <circle class="circle-bg"
+                cx="130" cy="130" r="120"/>
+
+            <circle class="circle-progress"
+                id="progressCircle"
+                cx="130" cy="130" r="120"/>
+        </svg>
+
+        <div class="time-content">
+            <div class="timer-display" id="timer">25:00</div>
+            <div class="time-label">MINUTES : SECONDS</div>
+        </div>
+
+    </div>
+
+    <div class="status" id="status">
+        Ready when you are.
+    </div>
+
+    <div class="presets">
+        <button class="preset" onclick="setPreset(5,this)">5 min</button>
+        <button class="preset" onclick="setPreset(15,this)">15 min</button>
+        <button class="preset active" onclick="setPreset(25,this)">25 min</button>
+        <button class="preset" onclick="setPreset(45,this)">45 min</button>
+        <button class="preset" onclick="setPreset(60,this)">60 min</button>
+    </div>
+
+    <div class="custom-time">
+        Custom duration
+        <input type="number" id="customMinutes"
+            min="1" max="999" placeholder="Minutes">
+        <button class="preset" onclick="applyCustom()">
+            Set
+        </button>
+    </div>
+
+    <div class="controls">
+        <button class="start-btn" onclick="startTimer()">
+            ▶ Start
+        </button>
+
+        <button class="pause-btn" onclick="pauseTimer()">
+            ⏸ Pause
+        </button>
+
+        <button class="reset-btn" onclick="resetTimer()">
+            ↻ Reset
+        </button>
+    </div>
+
+    <div class="sound-setting">
+        <label>
+            <input type="checkbox" id="soundEnabled" checked>
+            Enable timer sounds
+        </label>
+    </div>
+
+    <button onclick="testSchoolBell()"
+    style="background:#6555ed;color:white;padding:12px 20px;border:0;border-radius:10px;cursor:pointer;margin-top:12px;">
+        🔊 Test Sound
+    </button>
+
+    <button class="alarm-btn" id="alarmButton"
+        onclick="stopAlarm()">
+        🔕 Stop Alarm
+    </button>
+
+    <div class="footer">
+        STUDENTHUB PREMIUM TIMER · STAY FOCUSED
+    </div>
+
+</div>
+
+<script>
+
+const KEY = "studenthub_premium_timer";
+
+const timerDisplay = document.getElementById("timer");
+const statusText = document.getElementById("status");
+const progressCircle = document.getElementById("progressCircle");
+
+const CIRCUMFERENCE = 2 * Math.PI * 120;
+
+let duration = 1500;
+let remaining = 1500;
+let endTime = null;
+let running = false;
+let interval = null;
+let alarmInterval = null;
+let audioContext = null;
+let alarmActive = false;
+
+
+// CLOCK
+
+function updateClock() {
+    document.getElementById("clock").textContent =
+        new Date().toLocaleTimeString();
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+
+// AUDIO UNLOCK
+
+async function unlockAudio() {
+    const AudioCtx =
+        window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioCtx) {
+        alert("Your browser does not support timer audio.");
+        return false;
+    }
+
+    if (!audioContext) {
+        audioContext = new AudioCtx();
+    }
+
+    if (audioContext.state !== "running") {
+        await audioContext.resume();
+    }
+
+    return audioContext.state === "running";
+}
+
+
+// SCHOOL BELL SOUND
+
+function playSchoolBell() {
+
+    if (!audioContext ||
+        audioContext.state !== "running" ||
+        !document.getElementById("soundEnabled").checked) {
+        return;
+    }
+
+    const frequencies = [880, 1174.66, 880, 1174.66];
+
+    frequencies.forEach((frequency, index) => {
+
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.type = "square";
+        oscillator.frequency.value = frequency;
+
+        const startAt = audioContext.currentTime + index * 0.12;
+
+        gain.gain.setValueAtTime(0.22, startAt);
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            startAt + 0.65
+        );
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start(startAt);
+        oscillator.stop(startAt + 0.65);
+    });
+}
+
+
+// TEST SOUND
+
+async function testSchoolBell() {
+    const unlocked = await unlockAudio();
+
+    if (unlocked) {
+        playSchoolBell();
+    }
+}
+
+
+// OLD TONE FUNCTION
+
+function playTone(frequency = 1000, length = 400) {
+
+    if (!audioContext ||
+        audioContext.state !== "running" ||
+        !document.getElementById("soundEnabled").checked) {
+        return;
+    }
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value = frequency;
+
+    gain.gain.setValueAtTime(0.25, audioContext.currentTime);
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime + length / 1000
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+    oscillator.stop(
+        audioContext.currentTime + length / 1000
+    );
+}
+
+
+// DISPLAY
+
+function updateDisplay() {
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
+
+    timerDisplay.textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+
+    const progress = duration > 0
+        ? remaining / duration
+        : 0;
+
+    progressCircle.style.strokeDashoffset =
+        CIRCUMFERENCE * (1 - progress);
+
+    document.title =
+        (running ? timerDisplay.textContent + " - " : "") +
+        "StudentHub Focus Timer";
+}
+
+
+// SAVE
+
+function saveState() {
+    localStorage.setItem(KEY, JSON.stringify({
+        duration,
+        remaining,
+        endTime,
+        running
+    }));
+}
+
+
+// PRESETS
+
+function setPreset(minutes, button) {
+    if (running) return;
+
+    stopAlarm();
+
+    duration = minutes * 60;
+    remaining = duration;
+    endTime = null;
+
+    document.querySelectorAll(".preset").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    statusText.textContent = "New focus session selected.";
+
+    saveState();
+    updateDisplay();
+}
+
+function applyCustom() {
+    if (running) return;
+
+    const value = Number(
+        document.getElementById("customMinutes").value
+    );
+
+    if (!Number.isInteger(value) || value < 1 || value > 999) {
+        statusText.textContent = "Enter a duration between 1 and 999 minutes.";
+        return;
+    }
+
+    stopAlarm();
+
+    duration = value * 60;
+    remaining = duration;
+    endTime = null;
+
+    document.querySelectorAll(".preset").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    statusText.textContent = "Custom timer ready.";
+
+    saveState();
+    updateDisplay();
+}
+
+
+// START
+
+async function startTimer() {
+    await unlockAudio();
+
+    if (alarmActive) stopAlarm();
+
+    if (running) return;
+
+    if (remaining <= 0) {
+        statusText.textContent = "Choose a new timer duration.";
+        return;
+    }
+
+    if ("Notification" in window &&
+        Notification.permission === "default") {
+        try {
+            await Notification.requestPermission();
+        } catch (error) {
+            console.log("Notification permission unavailable.");
+        }
+    }
+
+    endTime = Date.now() + remaining * 1000;
+    running = true;
+
+    statusText.textContent = "🔥 Focus session running!";
+
+    saveState();
+    runCountdown();
+}
+
+
+// COUNTDOWN
+
+function runCountdown() {
+    clearInterval(interval);
+
+    function tick() {
+        if (!running || !endTime) return;
+
+        remaining = Math.max(
+            0,
+            Math.ceil((endTime - Date.now()) / 1000)
+        );
+
+        updateDisplay();
+
+        if (remaining <= 0) {
+            finishTimer();
+            return;
+        }
+
+        saveState();
+    }
+
+    tick();
+    interval = setInterval(tick, 250);
+}
+
+
+// PAUSE
+
+function pauseTimer() {
+    if (!running) return;
+
+    remaining = Math.max(
+        0,
+        Math.ceil((endTime - Date.now()) / 1000)
+    );
+
+    if (remaining <= 0) {
+        finishTimer();
+        return;
+    }
+
+    running = false;
+    endTime = null;
+
+    clearInterval(interval);
+
+    statusText.textContent = "⏸ Session paused.";
+
+    saveState();
+    updateDisplay();
+}
+
+
+// RESET
+
+function resetTimer() {
+    running = false;
+    endTime = null;
+
+    clearInterval(interval);
+    stopAlarm();
+
+    remaining = duration;
+
+    statusText.textContent = "Timer reset. Ready again.";
+
+    saveState();
+    updateDisplay();
+}
+
+
+// FINISH
+
+function finishTimer() {
+    if (!running) return;
+
+    running = false;
+    remaining = 0;
+    endTime = null;
+
+    clearInterval(interval);
+
+    localStorage.removeItem(KEY);
+
+    updateDisplay();
+
+    statusText.textContent = "🎉 Excellent! Focus session completed.";
+
+    if ("Notification" in window &&
+        Notification.permission === "granted") {
+        try {
+            new Notification("StudentHub", {
+                body: "Your focus timer has finished!",
+                tag: "studenthub-focus"
+            });
+        } catch (error) {
+            console.log("Notification unavailable.");
+        }
+    }
+
+    startAlarm();
+}
+
+
+// ALARM
+
+async function startAlarm() {
+    if (alarmActive) return;
+
+    alarmActive = true;
+
+    document.getElementById("alarmButton").style.display =
+        "inline-block";
+
+    const unlocked = await unlockAudio();
+
+    if (!unlocked) return;
+
+    playSchoolBell();
+
+    alarmInterval = setInterval(() => {
+        if (audioContext.state === "running") {
+            playSchoolBell();
+        } else {
+            audioContext.resume().then(() => {
+                playSchoolBell();
+            });
+        }
+    }, 1800);
+}
+
+function stopAlarm() {
+    clearInterval(alarmInterval);
+
+    alarmActive = false;
+
+    document.getElementById("alarmButton").style.display =
+        "none";
+}
+
+
+// RESTORE AFTER REFRESH
+
+function restoreTimer() {
+    const saved = localStorage.getItem(KEY);
+
+    if (!saved) {
+        updateDisplay();
+        return;
+    }
+
+    try {
+        const data = JSON.parse(saved);
+
+        duration = data.duration;
+        remaining = data.remaining;
+
+        if (data.running && data.endTime) {
+            endTime = data.endTime;
+
+            remaining = Math.max(
+                0,
+                Math.ceil((endTime - Date.now()) / 1000)
+            );
+
+            if (remaining <= 0) {
+                running = true;
+                finishTimer();
+                return;
+            }
+
+            running = true;
+
+            statusText.textContent = "🔥 Your session has resumed.";
+
+            runCountdown();
+
+        } else {
+            running = false;
+            endTime = null;
+
+            statusText.textContent = "Your previous session is paused.";
+        }
+
+        updateDisplay();
+
+    } catch (error) {
+        localStorage.removeItem(KEY);
+        updateDisplay();
+    }
+}
+
+
+// WHEN USER RETURNS
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && running) {
+        runCountdown();
+    }
+});
+
+window.addEventListener("focus", () => {
+    if (running) runCountdown();
+});
+
+
+// INITIALIZE
+
+restoreTimer();
+
+</script>
+
+</body>
+</html>

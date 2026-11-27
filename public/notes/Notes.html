@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudentHub | Notes</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #241044, #51218a, #8b5cf6);
+    color: white;
+    padding: 25px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #d8b4fe;
+}
+
+.back {
+    color: white;
+    text-decoration: none;
+    background: #ffffff20;
+    padding: 11px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.welcome p {
+    color: #e9d5ff;
+}
+
+.search {
+    width: 100%;
+    max-width: 550px;
+    padding: 15px;
+    border: 1px solid #ffffff40;
+    border-radius: 12px;
+    outline: none;
+    margin: 20px 0 30px;
+    font-size: 15px;
+}
+
+.section-title {
+    margin: 20px 0 15px;
+    font-size: 20px;
+}
+
+.classes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 12px;
+}
+
+.class-card {
+    padding: 17px 10px;
+    border: 1px solid #ffffff35;
+    background: #ffffff18;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.class-card:hover,
+.class-card.active {
+    background: white;
+    color: #51218a;
+}
+
+.subjects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 17px;
+    margin-top: 20px;
+}
+
+.subject-card {
+    background: #ffffff18;
+    border: 1px solid #ffffff30;
+    padding: 22px;
+    border-radius: 16px;
+    transition: 0.2s;
+}
+
+.subject-card:hover {
+    transform: translateY(-4px);
+    background: #ffffff25;
+}
+
+.subject-icon {
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+.subject-card h3 {
+    margin-bottom: 9px;
+}
+
+.subject-card p {
+    color: #e9d5ff;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.actions {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+.actions a {
+    text-decoration: none;
+    padding: 10px 13px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.read {
+    background: white;
+    color: #51218a;
+}
+
+.download {
+    background: #a78bfa;
+    color: white;
+}
+
+.empty {
+    color: #e9d5ff;
+    margin-top: 20px;
+}
+
+footer {
+    text-align: center;
+    color: #e9d5ff;
+    margin-top: 50px;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+    .welcome h1 {
+        font-size: 25px;
+    }
+}
+
+@media (max-width: 400px) {
+    .subjects {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">Student<span>Hub</span> 🎓</div>
+    <button onclick="history.back()" class="back">← Dashboard</button>
+</header>
+
+<section class="welcome">
+    <h1>Learning Library</h1>
+    <p>Find your class notes, study online and download learning materials.</p>
+</section>
+
+<input
+    type="search"
+    class="search"
+    id="searchInput"
+    placeholder="🔍 Search for a subject..."
+>
+
+<h2 class="section-title">Choose your class</h2>
+
+<div class="classes" id="classList">
+    <button class="class-card active" data-class="JSS1">JSS1</button>
+    <button class="class-card" data-class="JSS2">JSS2</button>
+    <button class="class-card" data-class="JSS3">JSS3</button>
+    <button class="class-card" data-class="SS1">SS1</button>
+    <button class="class-card" data-class="SS2">SS2</button>
+    <button class="class-card" data-class="SS3">SS3</button>
+</div>
+
+<h2 class="section-title" id="subjectHeading">JSS1 Subjects</h2>
+
+<div class="subjects" id="subjectList"></div>
+
+<footer>
+    © 2026 StudentHub. Learn, Grow and Succeed.
+</footer>
+
+<script>
+
+const classSubjects = {
+
+JSS1: [
+    {name:"Mathematics",icon:"📐",file:"JSS1-Mathematics.pdf"},
+    {name:"English Language",icon:"📖",file:"JSS1-English.pdf"},
+    {name:"Basic Science",icon:"🔬",file:"JSS1-Basic-Science.pdf"},
+    {name:"Basic Technology",icon:"⚙️",file:"JSS1-Basic-Technology.pdf"},
+    {name:"Social Studies",icon:"🌍",file:"JSS1-Social-Studies.pdf"},
+    {name:"Digital Technology",icon:"💻",file:"JSS1-Digital-Technology.pdf"},
+    {name:"Agricultural Science",icon:"🌱",file:"JSS1-Agricultural-Science.pdf"},
+    {name:"Business Studies",icon:"📊",file:"JSS1-Business-Studies.pdf"},
+    {name:"Civic Education",icon:"🏛️",file:"JSS1-Civic-Education.pdf"},
+    {name:"Four Figure Table",icon:"➕",file:"JSS1-Four-Figure-Table.pdf"}
+],
+
+JSS2: [
+    {name:"Mathematics",icon:"📐",file:"JSS2-Mathematics.pdf"},
+    {name:"English Language",icon:"📖",file:"JSS2-English.pdf"},
+    {name:"Basic Science",icon:"🔬",file:"JSS2-Basic-Science.pdf"},
+    {name:"Basic Technology",icon:"⚙️",file:"JSS2-Basic-Technology.pdf"},
+    {name:"Social Studies",icon:"🌍",file:"JSS2-Social-Studies.pdf"},
+    {name:"Digital Technology",icon:"💻",file:"JSS2-Digital-Technology.pdf"},
+    {name:"Agricultural Science",icon:"🌱",file:"JSS2-Agricultural-Science.pdf"},
+    {name:"Business Studies",icon:"📊",file:"JSS2-Business-Studies.pdf"},
+    {name:"Civic Education",icon:"🏛️",file:"JSS2-Civic-Education.pdf"},
+    {name:"Four Figure Table",icon:"➕",file:"JSS2-Four-Figure-Table.pdf"}
+],
+
+JSS3: [
+    {name:"Mathematics",icon:"📐",file:"JSS3-Mathematics.pdf"},
+    {name:"English Language",icon:"📖",file:"JSS3-English.pdf"},
+    {name:"Basic Science",icon:"🔬",file:"JSS3-Basic-Science.pdf"},
+    {name:"Basic Technology",icon:"⚙️",file:"JSS3-Basic-Technology.pdf"},
+    {name:"Social Studies",icon:"🌍",file:"document (1).pdf"},
+    {name:"Agricultural Science",icon:"🌱",file:"JSS3-Agricultural-Science.pdf"},
+    {name:"Business Studies",icon:"📊",file:"JSS3-Business-Studies.pdf"},
+    {name:"Civic Education",icon:"🏛️",file:"JSS3-Civic-Education.pdf"},
+    {name:"Four Figure Table",icon:"➕",file:"Four-Figure_Tables.pdf"},
+    {name:"All JSS3 Notes",icon:"📚",file:"ALL NOTES FOR JSS3.pdf"}
+],
+
+SS1: [
+    {name:"Mathematics",icon:"📐",file:"SS1-Mathematics.pdf"},
+    {name:"English Language",icon:"📖",file:"SS1-English.pdf"},
+    {name:"Chemistry",icon:"🧪",file:"SS1-Chemistry.pdf"},
+    {name:"Physics",icon:"⚡",file:"SS1-Physics.pdf"},
+    {name:"Biology",icon:"🧬",file:"SS1-Biology.pdf"},
+    {name:"Further Mathematics",icon:"➗",file:"SS1-Further-Mathematics.pdf"},
+    {name:"Economics",icon:"📈",file:"SS1-Economics.pdf"},
+    {name:"Government",icon:"🏛️",file:"SS1-Government.pdf"},
+    {name:"Geography",icon:"🌍",file:"SS1-Geography.pdf"},
+    {name:"Literature in English",icon:"📚",file:"SS1-Literature.pdf"},
+    {name:"Accounting",icon:"💰",file:"SS1-Accounting.pdf"},
+    {name:"Agricultural Science",icon:"🌱",file:"SS1-Agricultural-Science.pdf"},
+    {name:"Computer Studies",icon:"💻",file:"SS1-Computer-Studies.pdf"},
+    {name:"Civic Education",icon:"⚖️",file:"SS1-Civic-Education.pdf"}
+],
+
+SS2: [
+    {name:"Mathematics",icon:"📐",file:"SS2-Mathematics.pdf"},
+    {name:"English Language",icon:"📖",file:"SS2-English.pdf"},
+    {name:"Chemistry",icon:"🧪",file:"SS2-Chemistry.pdf"},
+    {name:"Physics",icon:"⚡",file:"SS2-Physics.pdf"},
+    {name:"Biology",icon:"🧬",file:"SS2-Biology.pdf"},
+    {name:"Further Mathematics",icon:"➗",file:"SS2-Further-Mathematics.pdf"},
+    {name:"Economics",icon:"📈",file:"SS2-Economics.pdf"},
+    {name:"Government",icon:"🏛️",file:"SS2-Government.pdf"},
+    {name:"Geography",icon:"🌍",file:"SS2-Geography.pdf"},
+    {name:"Literature in English",icon:"📚",file:"SS2-Literature.pdf"},
+    {name:"Accounting",icon:"💰",file:"SS2-Accounting.pdf"},
+    {name:"Agricultural Science",icon:"🌱",file:"SS2-Agricultural-Science.pdf"},
+    {name:"Computer Studies",icon:"💻",file:"SS2-Computer-Studies.pdf"},
+    {name:"Civic Education",icon:"⚖️",file:"SS2-Civic-Education.pdf"}
+],
+
+SS3: [
+    {name:"Mathematics",icon:"📐",file:"SS3-Mathematics.pdf"},
+    {name:"English Language",icon:"📖",file:"SS3-English.pdf"},
+    {name:"Chemistry",icon:"🧪",file:"SS3-Chemistry.pdf"},
+    {name:"Physics",icon:"⚡",file:"SS3-Physics.pdf"},
+    {name:"Biology",icon:"🧬",file:"SS3-Biology.pdf"},
+    {name:"Further Mathematics",icon:"➗",file:"SS3-Further-Mathematics.pdf"},
+    {name:"Economics",icon:"📈",file:"SS3-Economics.pdf"},
+    {name:"Government",icon:"🏛️",file:"SS3-Government.pdf"},
+    {name:"Geography",icon:"🌍",file:"SS3-Geography.pdf"},
+    {name:"Literature in English",icon:"📚",file:"SS3-Literature.pdf"},
+    {name:"Accounting",icon:"💰",file:"SS3-Accounting.pdf"},
+    {name:"Agricultural Science",icon:"🌱",file:"SS3-Agricultural-Science.pdf"},
+    {name:"Computer Studies",icon:"💻",file:"SS3-Computer-Studies.pdf"},
+    {name:"Civic Education",icon:"⚖️",file:"SS3-Civic-Education.pdf"}
+]
+
+};
+
+let selectedClass = "JSS1";
+
+const subjectList = document.getElementById("subjectList");
+const searchInput = document.getElementById("searchInput");
+
+function displaySubjects() {
+
+    const subjects = classSubjects[selectedClass];
+
+    const search = searchInput.value.toLowerCase();
+
+    const filtered = subjects.filter(subject =>
+        subject.name.toLowerCase().includes(search)
+    );
+
+    document.getElementById("subjectHeading").textContent =
+        selectedClass + " Subjects";
+
+    subjectList.innerHTML = "";
+
+    if (filtered.length === 0) {
+        subjectList.innerHTML =
+            '<p class="empty">No matching subjects found.</p>';
+        return;
+    }
+
+    filtered.forEach(subject => {
+
+        const pdfPath = "/notes/" + encodeURIComponent(subject.file)
+            .replace(/%2F/gi, "/");
+
+        subjectList.innerHTML += `
+            <div class="subject-card">
+
+                <div class="subject-icon">${subject.icon}</div>
+
+                <h3>${subject.name}</h3>
+
+                <p>${selectedClass} learning materials</p>
+
+                <div class="actions">
+
+                    <a class="read"
+                       href="${pdfPath}"
+                       target="_blank"
+                       rel="noopener">
+                       Read Online
+                    </a>
+
+                    <a class="download"
+                       href="${pdfPath}"
+                       download>
+                       Download PDF
+                    </a>
+
+                </div>
+
+            </div>
+        `;
+    });
+}
+
+document.querySelectorAll(".class-card").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        document.querySelector(".class-card.active")
+            ?.classList.remove("active");
+
+        button.classList.add("active");
+
+        selectedClass = button.dataset.class;
+
+        displaySubjects();
+    });
+
+});
+
+searchInput.addEventListener("input", displaySubjects);
+
+displaySubjects();
+
+</script>
+
+</body>
+</html>
