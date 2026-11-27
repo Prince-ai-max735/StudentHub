@@ -1,0 +1,1 @@
+{"name":"studethub","version":"1.0.0","description":"A student school-life organizer","main":"server.js","scripts":{"start":"node server.js","dev":"node server.js"},"dependencies":{"bcrypt":"^6.0.0","bcryptjs":"^2.4.3","express":"^4.22.2","jsonwebtoken":"^9.0.2","sqlite3":"^5.1.7"},"keywords":[],"author":"","license":"ISC","type":"commonjs"}
